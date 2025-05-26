@@ -6,39 +6,47 @@ import time
 import os
 
 def run_update():
-    EMAIL = os.getenv("NAUKRI_EMAIL")
-    PASSWORD = os.getenv("NAUKRI_PASSWORD")
+    try:
+        EMAIL = os.getenv("NAUKRI_EMAIL")
+        PASSWORD = os.getenv("NAUKRI_PASSWORD")
 
-    options = Options()
-    options.add_argument("--headless")
-    options.add_argument("--no-sandbox")
-    options.add_argument("--disable-dev-shm-usage")
+        if not EMAIL or not PASSWORD:
+            raise Exception("Environment variables for email/password not set.")
 
-    driver = webdriver.Chrome(options=options)
-    driver.get("https://www.naukri.com/nlogin/login")
-    time.sleep(3)
+        options = Options()
+        options.add_argument("--headless")
+        options.add_argument("--no-sandbox")
+        options.add_argument("--disable-dev-shm-usage")
 
-    # Login
-    driver.find_element(By.ID, "usernameField").send_keys(EMAIL)
-    driver.find_element(By.ID, "passwordField").send_keys(PASSWORD)
-    driver.find_element(By.XPATH, "//button[text()='Login']").click()
-    time.sleep(5)
+        driver = webdriver.Chrome(options=options)
+        driver.get("https://www.naukri.com/nlogin/login")
+        time.sleep(3)
 
-    # Go to profile
-    driver.get("https://www.naukri.com/mnjuser/profile")
-    time.sleep(5)
-   headline = driver.find_element(By.CLASS_NAME, "resumeHeadline")
+        # Login
+        driver.find_element(By.ID, "usernameField").send_keys(EMAIL)
+        driver.find_element(By.ID, "passwordField").send_keys(PASSWORD)
+        driver.find_element(By.XPATH, "//button[text()='Login']").click()
+        time.sleep(5)
+
+        # Go to profile
+        driver.get("https://www.naukri.com/mnjuser/profile")
+        time.sleep(5)
+
+        # Edit Headline
+        headline = driver.find_element(By.CLASS_NAME, "resumeHeadline")
+        headline.click()
+        time.sleep(2)
+
         headline.send_keys(" ")
         headline.send_keys(Keys.BACKSPACE)
-    # Edit and Save headline
-    try:
-        driver.find_element(By.CLASS_NAME, "edit icon").click()
-        time.sleep(3)
-       
-        headline.send_keys(Keys.BACKSPACE)
+        time.sleep(2)
+
         driver.find_element(By.XPATH, "//button[text()='Save']").click()
-        print("Profile updated successfully.")
+        time.sleep(2)
+
+        driver.quit()
+        return True
+
     except Exception as e:
-        print("Update failed:", str(e))
-    
-    driver.quit()
+        print("Error:", str(e))
+        return False
