@@ -1,5 +1,4 @@
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
+import undetected_chromedriver as uc
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 import time
@@ -11,42 +10,50 @@ def run_update():
         PASSWORD = os.getenv("NAUKRI_PASSWORD")
 
         if not EMAIL or not PASSWORD:
-            raise Exception("Environment variables for email/password not set.")
+            raise Exception("Environment variables not set.")
 
-        options = Options()
+        options = uc.ChromeOptions()
         options.add_argument("--headless")
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-dev-shm-usage")
 
-        driver = webdriver.Chrome(options=options)
+        driver = uc.Chrome(options=options)
+
         driver.get("https://www.naukri.com/nlogin/login")
         time.sleep(3)
 
-        # Login
         driver.find_element(By.ID, "usernameField").send_keys(EMAIL)
         driver.find_element(By.ID, "passwordField").send_keys(PASSWORD)
         driver.find_element(By.XPATH, "//button[text()='Login']").click()
         time.sleep(5)
 
-        # Go to profile
         driver.get("https://www.naukri.com/mnjuser/profile")
         time.sleep(5)
 
-        # Edit Headline
-        headline = driver.find_element(By.CLASS_NAME, "resumeHeadline")
-        headline.click()
+        # Click "Edit" on resume headline
+        edit_buttons = driver.find_elements(By.CLASS_NAME, "edit")
+        for btn in edit_buttons:
+            try:
+                btn.click()
+                break
+            except:
+                continue
+        time.sleep(3)
+
+        # Edit resume headline
+        textarea = driver.find_element(By.XPATH, "//textarea[contains(@class,'resumeHeadline')]")
+        textarea.send_keys(" ")  # Simulate change
+        textarea.send_keys(Keys.BACKSPACE)
         time.sleep(2)
 
-        headline.send_keys(" ")
-        headline.send_keys(Keys.BACKSPACE)
-        time.sleep(2)
+        # Save headline
+        save_btn = driver.find_element(By.XPATH, "//button[text()='Save']")
+        save_btn.click()
 
-        driver.find_element(By.XPATH, "//button[text()='Save']").click()
-        time.sleep(2)
-
+        print("✅ Profile updated.")
         driver.quit()
         return True
 
     except Exception as e:
-        print("Error:", str(e))
+        print("❌ Error:", str(e))
         return False
