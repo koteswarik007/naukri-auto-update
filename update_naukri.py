@@ -30,10 +30,9 @@ def run_update():
 
     # Edit and Save headline
     try:
-        driver.find_element(By.CLASS_NAME, "icon edit ").click()
+        driver.find_element(By.CLASS_NAME, "edit icon").click()
         time.sleep(3)
-        headline = driver.find_element(By.CLASS_NAME, "resumeHeadline")
-        headline.send_keys(" ")
+       
         headline.send_keys(Keys.BACKSPACE)
         driver.find_element(By.XPATH, "//button[text()='Save']").click()
         print("Profile updated successfully.")
