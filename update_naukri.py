@@ -55,8 +55,8 @@ def run_update():
         driver.quit()
         return True
 
-     except Exception as e:
-        print("❌ Exception occurred while updating profile:")
-        print(str(e))
-        traceback.print_exc()
-        return False
+    except Exception as e:
+        print("Update failed:", str(e))
+    
+    driver.quit()
+
