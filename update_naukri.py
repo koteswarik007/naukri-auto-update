@@ -30,7 +30,7 @@ def run_update():
 
     # Edit and Save headline
     try:
-        driver.find_element(By.CLASS_NAME, "edit-icon").click()
+        driver.find_element(By.CLASS_NAME, "icon edit ").click()
         time.sleep(3)
         headline = driver.find_element(By.CLASS_NAME, "resumeHeadline")
         headline.send_keys(" ")
