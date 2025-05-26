@@ -6,8 +6,8 @@ import time
 import os
 
 def run_update():
-    EMAIL = os.getenv("kumara.raja10@gmail.com")
-    PASSWORD = os.getenv("Tenali$123")
+    EMAIL = os.getenv("NAUKRI_EMAIL")
+    PASSWORD = os.getenv("NAUKRI_PASSWORD")
 
     options = Options()
     options.add_argument("--headless")
