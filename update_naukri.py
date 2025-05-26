@@ -27,7 +27,9 @@ def run_update():
     # Go to profile
     driver.get("https://www.naukri.com/mnjuser/profile")
     time.sleep(5)
-
+   headline = driver.find_element(By.CLASS_NAME, "resumeHeadline")
+        headline.send_keys(" ")
+        headline.send_keys(Keys.BACKSPACE)
     # Edit and Save headline
     try:
         driver.find_element(By.CLASS_NAME, "edit icon").click()
