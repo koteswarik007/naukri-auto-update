@@ -4,7 +4,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 import time
 import os
-
+import traceback
 def run_update():
     try:
         EMAIL = os.getenv("NAUKRI_EMAIL")
@@ -55,6 +55,8 @@ def run_update():
         driver.quit()
         return True
 
-    except Exception as e:
-        print("❌ Exception:", e)
+     except Exception as e:
+        print("❌ Exception occurred while updating profile:")
+        print(str(e))
+        traceback.print_exc()
         return False
